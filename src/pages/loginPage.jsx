@@ -12,7 +12,7 @@
         <div className="field">
           <label className="label">Contraseña</label>
           <div className="control">
-            <input className="input" type="password"  placeholder="********" />
+            <input className="input" type="password" placeholder="********" />
           </div>
         </div>
 
