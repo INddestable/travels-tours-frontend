@@ -12,6 +12,10 @@
     "vite": "^8.0.12"
   },
   "dependencies": {
-    "react-router-dom": "^7.15.0"
+    "bootstrap": "^5.3.8",
+    "bulma": "^1.0.4",
+    "react-bootstrap": "^2.10.10",
+    "react-router-dom": "^7.15.0",
+    "sass": "^1.99.0"
   }
 }
