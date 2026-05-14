@@ -1,12 +1,14 @@
-﻿import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 
-export default function LoginPage() {
+function Contacto() {
   const [formData, setFormData] = useState({
+    nombre: '',
     email: '',
-    password: ''
+    mensaje: ''
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -20,8 +22,9 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
-    fetch('http://localhost:3000/api/auth/login', {
+    fetch('http://localhost:3000/api/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -34,21 +37,31 @@ export default function LoginPage() {
         if (data.error) {
           setError(data.error);
         } else {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('rol', data.rol);
-          window.location.href = '/';
+          setSuccess('Mensaje enviado correctamente');
+          setFormData({ nombre: '', email: '', mensaje: '' });
         }
       })
       .catch(error => {
         setLoading(false);
-        setError('Error al iniciar sesion');
+        setError('Error al enviar mensaje');
       });
   };
 
   return (
-    <div className="container mt-5">
-      <h1>Iniciar Sesion</h1>
+    <Container>
+      <h1>Contacto</h1>
       <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Nombre</Form.Label>
+          <Form.Control
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -61,22 +74,25 @@ export default function LoginPage() {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Contrasena</Form.Label>
+          <Form.Label>Mensaje</Form.Label>
           <Form.Control
-            type="password"
-            name="password"
-            value={formData.password}
+            as="textarea"
+            rows={3}
+            name="mensaje"
+            value={formData.mensaje}
             onChange={handleChange}
             required
           />
         </Form.Group>
 
         {error && <Alert variant="danger">{error}</Alert>}
-
+        {success && <Alert variant="success">{success}</Alert>} 
         <Button variant="primary" type="submit" disabled={loading}>
-          {loading ? 'Iniciando...' : 'Iniciar sesion'}
+          {loading ? 'Enviando...' : 'Enviar'}
         </Button>
       </Form>
-    </div>
+    </Container>
   );
 }
+
+export default Contacto;

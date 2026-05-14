@@ -1,54 +1,60 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function NavBar() {
-  return (
-    <>
-      <Navbar bg="light" expand="lg">
-        <Container className="nav">
-          <Navbar.Brand href="/">Travels Tours</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/login">Login</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-    </>
-  );
-}
+  const rol = localStorage.getItem("rol");
+  
+  let links = [
+    { to: "/", label: "Inicio" },
+    { to: "/catalogo", label: "Catalogo" },
+    { to: "/blog", label: "Blog" },
+    { to: "/contacto", label: "Contacto" },
+  ];
 
-function NavBarAdmin() {
-  return (
-    <>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="/">Travels Tours</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/Dashboard">Dashboard</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-    </>
-  );
-}
+  if (rol === "ADMIN") {
+    links.push(
+      { to: "/admin/paquetes", label: "Paquetes" },
+      { to: "/admin/blog", label: "Blog Admin" },
+      { to: "/admin/metricas", label: "Metricas" }
+    );
+  } else if (rol === "ASESOR") {
+    links.push(
+      { to: "/asesor/crear", label: "Crear Paquete" },
+      { to: "/asesor/mis-paquetes", label: "Mis Paquetes" },
+      { to: "/admin/metricas", label: "Metricas" }
+    );
+  } else if (rol === "CLIENTE") {
+    links.push(
+      { to: "/reservas", label: "Mis Reservas" },
+      { to: "/favoritos", label: "Favoritos" },
+      { to: "/perfil", label: "Perfil" }
+    );
+  } else {
+    links.push({ to: "/login", label: "Login" });
+    links.push({ to: "/registro", label: "Registro" });
+  }
 
-function NavBarUser() {
   return (
-    <>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="/">Travels Tours</Navbar.Brand>
+    <Navbar bg="light" expand="lg">
+      <Container className="nav">
+        <Navbar.Brand as={Link} to="/">
+          Travels Tours
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/Dashboard">Mis Reservas</Nav.Link>
+            {links.map((link) => (
+              <Nav.Link as={Link} to={link.to} key={link.to}>
+                {link.label}
+              </Nav.Link>
+            ))}
           </Nav>
-        </Container>
-      </Navbar>
-    </>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
 
 export default NavBar;
-export { NavBarAdmin, NavBarUser };

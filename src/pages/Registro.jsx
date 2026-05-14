@@ -1,8 +1,9 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-export default function LoginPage() {
+function Registro() {
   const [formData, setFormData] = useState({
+    nombre: '',
     email: '',
     password: ''
   });
@@ -21,7 +22,7 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    fetch('http://localhost:3000/api/auth/login', {
+    fetch('http://localhost:3000/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -34,21 +35,30 @@ export default function LoginPage() {
         if (data.error) {
           setError(data.error);
         } else {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('rol', data.rol);
-          window.location.href = '/';
+          alert('Registro exitoso');
         }
       })
       .catch(error => {
         setLoading(false);
-        setError('Error al iniciar sesion');
+        setError('Error al registrar');
       });
   };
 
   return (
     <div className="container mt-5">
-      <h1>Iniciar Sesion</h1>
+      <h1>Registro</h1>
       <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Nombre</Form.Label>
+          <Form.Control
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -61,7 +71,7 @@ export default function LoginPage() {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Contrasena</Form.Label>
+          <Form.Label>Contraseña</Form.Label>
           <Form.Control
             type="password"
             name="password"
@@ -74,9 +84,11 @@ export default function LoginPage() {
         {error && <Alert variant="danger">{error}</Alert>}
 
         <Button variant="primary" type="submit" disabled={loading}>
-          {loading ? 'Iniciando...' : 'Iniciar sesion'}
+          {loading ? 'Registrando...' : 'Registrar'}
         </Button>
       </Form>
     </div>
   );
 }
+
+export default Registro;
